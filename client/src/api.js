@@ -1,5 +1,5 @@
 import axios from 'axios';
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001',
+  baseURL: 'https://vaultly-finance-tracker-production.up.railway.app',
 });
 export default api;
