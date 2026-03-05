@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function(app) {
   app.use('/api', createProxyMiddleware({
-    target: 'https://vaultly-finance-tracker-production.up.railway.app',
+    target: process.env.REACT_APP_API_URL || 'http://localhost:5001',
     changeOrigin: true,
   }));
 };

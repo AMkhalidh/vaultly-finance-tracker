@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import AddTransactionModal from '../components/AddTransactionModal';
 const CATS=['Food','Transport','Housing','Entertainment','Healthcare','Shopping','Education','Salary','Freelance','Investment','Other'];
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -12,11 +12,11 @@ export default function Transactions() {
   const [deleting,setDeleting]=useState(null);
   const fetchT = async () => {
     setLoading(true);
-    try { const p={month:filters.month,year:filters.year}; if(filters.type)p.type=filters.type; if(filters.category)p.category=filters.category; setTransactions((await axios.get('/api/transactions',{params:p})).data); }
+    try { const p={month:filters.month,year:filters.year}; if(filters.type)p.type=filters.type; if(filters.category)p.category=filters.category; setTransactions((await api.get('/api/transactions',{params:p})).data); }
     catch(e){console.error(e);} finally{setLoading(false);}
   };
   useEffect(()=>{fetchT();},[filters]);
-  const del = async(id)=>{ setDeleting(id); try{await axios.delete(`/api/transactions/${id}`);fetchT();}catch(e){console.error(e);}finally{setDeleting(null);} };
+  const del = async(id)=>{ setDeleting(id); try{await api.delete(`/api/transactions/${id}`);fetchT();}catch(e){console.error(e);}finally{setDeleting(null);} };
   return (
     <div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:32,animation:'fadeUp 0.3s ease both'}}>

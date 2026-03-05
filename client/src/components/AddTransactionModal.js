@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 const CATS = { expense:['Food','Transport','Housing','Entertainment','Healthcare','Shopping','Education','Other'], income:['Salary','Freelance','Investment','Other'] };
 export default function AddTransactionModal({ onClose, onSaved, editData }) {
   const [form, setForm] = useState({ type:'expense', amount:'', category:'Food', description:'', date:new Date().toISOString().split('T')[0] });
@@ -8,7 +8,7 @@ export default function AddTransactionModal({ onClose, onSaved, editData }) {
   useEffect(() => { if (editData) setForm({ type:editData.type, amount:editData.amount, category:editData.category, description:editData.description||'', date:new Date(editData.date).toISOString().split('T')[0] }); }, [editData]);
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
-    try { editData ? await axios.put(`/api/transactions/${editData._id}`, form) : await axios.post('/api/transactions', form); onSaved(); }
+    try { editData ? await api.put(`/api/transactions/${editData._id}`, form) : await api.post('/api/transactions', form); onSaved(); }
     catch (err) { setError(err.response?.data?.message||'Something went wrong'); } finally { setLoading(false); }
   };
   return (

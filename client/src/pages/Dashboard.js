@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import AddTransactionModal from '../components/AddTransactionModal';
@@ -19,7 +19,7 @@ export default function Dashboard() {
   const now = new Date();
   const fetchData = async () => {
     try {
-      const [s,t,r] = await Promise.all([axios.get(`/api/transactions/summary?month=${now.getMonth()+1}&year=${now.getFullYear()}`),axios.get('/api/transactions/trend'),axios.get(`/api/transactions?month=${now.getMonth()+1}&year=${now.getFullYear()}`)]);
+      const [s,t,r] = await Promise.all([api.get(`/api/transactions/summary?month=${now.getMonth()+1}&year=${now.getFullYear()}`),api.get('/api/transactions/trend'),api.get(`/api/transactions?month=${now.getMonth()+1}&year=${now.getFullYear()}`)]);
       setSummary(s.data); setTrend(t.data); setRecent(r.data.slice(0,5));
     } catch(e) { console.error(e); }
   };
