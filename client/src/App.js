@@ -1,21 +1,27 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
-import Layout from './components/Layout';
-import './index.css';
-function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
-  if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',background:'var(--bg-primary)'}}><div style={{width:40,height:40,border:'3px solid var(--border)',borderTopColor:'var(--accent)',borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/></div>;
-  return user ? children : <Navigate to="/login" />;
+import SavingsGoals from './pages/SavingsGoals';
+import Recurring from './pages/Recurring';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+
+function PrivateRoute({ children }) {
+  const { token, loading } = useAuth();
+  if (loading) return <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg-primary)',color:'var(--text-muted)',fontSize:14}}>Loading...</div>;
+  return token ? <Layout>{children}</Layout> : <Navigate to="/login" />;
 }
+
 function PublicRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { token, loading } = useAuth();
   if (loading) return null;
-  return user ? <Navigate to="/dashboard" /> : children;
+  return token ? <Navigate to="/dashboard" /> : children;
 }
+
 export default function App() {
   return (
     <AuthProvider>
@@ -23,11 +29,13 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-          <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-            <Route index element={<Navigate to="/dashboard" />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="transactions" element={<Transactions />} />
-          </Route>
+          <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+          <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/transactions" element={<PrivateRoute><Transactions /></PrivateRoute>} />
+          <Route path="/goals" element={<PrivateRoute><SavingsGoals /></PrivateRoute>} />
+          <Route path="/recurring" element={<PrivateRoute><Recurring /></PrivateRoute>} />
+          <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

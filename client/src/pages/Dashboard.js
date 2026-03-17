@@ -8,19 +8,27 @@ const CT = ({ active, payload, label }) => {
   if (!active||!payload?.length) return null;
   return <div style={{background:'var(--bg-card)',border:'1px solid var(--border-light)',borderRadius:8,padding:'10px 14px'}}><p style={{fontSize:12,color:'var(--text-muted)',marginBottom:6}}>{label}</p>{payload.map(p=><p key={p.name} style={{fontSize:13,color:p.color,fontFamily:'var(--font-mono)',fontWeight:600}}>{p.name}: ${p.value?.toFixed(2)}</p>)}</div>;
 };
+const INSIGHT_COLORS = { warning:'var(--yellow)', positive:'var(--green)', info:'var(--accent)' };
+const INSIGHT_BG = { warning:'var(--yellow-dim)', positive:'var(--green-dim)', info:'var(--accent-dim)' };
 export default function Dashboard() {
   const { user, updateBudget } = useAuth();
   const [summary, setSummary] = useState({ income:0,expenses:0,balance:0,categoryBreakdown:{} });
   const [trend, setTrend] = useState([]);
   const [recent, setRecent] = useState([]);
+  const [insights, setInsights] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingBudget, setEditingBudget] = useState(false);
   const [budgetInput, setBudgetInput] = useState('');
   const now = new Date();
   const fetchData = async () => {
     try {
-      const [s,t,r] = await Promise.all([api.get(`/api/transactions/summary?month=${now.getMonth()+1}&year=${now.getFullYear()}`),api.get('/api/transactions/trend'),api.get(`/api/transactions?month=${now.getMonth()+1}&year=${now.getFullYear()}`)]);
-      setSummary(s.data); setTrend(t.data); setRecent(r.data.slice(0,5));
+      const [s,t,r,ins] = await Promise.all([
+        api.get(`/api/transactions/summary?month=${now.getMonth()+1}&year=${now.getFullYear()}`),
+        api.get('/api/transactions/trend'),
+        api.get(`/api/transactions?month=${now.getMonth()+1}&year=${now.getFullYear()}`),
+        api.get('/api/insights')
+      ]);
+      setSummary(s.data); setTrend(t.data); setRecent(r.data.slice(0,5)); setInsights(ins.data);
     } catch(e) { console.error(e); }
   };
   useEffect(()=>{ fetchData(); },[]);
@@ -47,6 +55,19 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+      {insights.length>0&&(
+        <div style={{marginBottom:24}}>
+          <p className="label" style={{marginBottom:12}}>AI Insights</p>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:10}}>
+            {insights.map((ins,i)=>(
+              <div key={i} style={{background:INSIGHT_BG[ins.type],border:`1px solid ${INSIGHT_COLORS[ins.type]}22`,borderRadius:12,padding:'12px 16px',display:'flex',alignItems:'flex-start',gap:10,animation:`fadeUp 0.4s ease ${i*0.05}s both`}}>
+                <span style={{fontSize:18,flexShrink:0}}>{ins.icon}</span>
+                <p style={{fontSize:13,color:'var(--text-primary)',lineHeight:1.5}}>{ins.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {(user?.monthlyBudget>0||editingBudget)&&(
         <div className="card" style={{marginBottom:24}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>

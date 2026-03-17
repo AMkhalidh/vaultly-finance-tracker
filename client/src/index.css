@@ -1,18 +1,69 @@
-:root{--bg-primary:#0a0a0f;--bg-secondary:#111118;--bg-card:#16161f;--bg-card-hover:#1c1c28;--border:#2a2a3a;--border-light:#323248;--accent:#7c6cfc;--accent-hover:#9585ff;--accent-dim:rgba(124,108,252,0.12);--green:#2dd4a0;--green-dim:rgba(45,212,160,0.12);--red:#ff5e7d;--red-dim:rgba(255,94,125,0.12);--yellow:#f5c842;--text-primary:#eeeef5;--text-secondary:#8888aa;--text-muted:#55556a;--font-display:'Syne',sans-serif;--font-mono:'DM Mono',monospace;--radius:12px;--radius-sm:8px;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-display);min-height:100vh;-webkit-font-smoothing:antialiased;}
-::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg-primary);}::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-sm);font-family:var(--font-display);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s ease;text-decoration:none;}
-.btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,108,252,0.4);}
-.btn-ghost{background:transparent;color:var(--text-secondary);border:1px solid var(--border);}.btn-ghost:hover{border-color:var(--border-light);color:var(--text-primary);background:var(--bg-card);}
-.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,94,125,0.2);}.btn-danger:hover{background:rgba(255,94,125,0.2);}
-.btn-sm{padding:6px 14px;font-size:13px;}
-.input{width:100%;padding:12px 16px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:var(--font-display);font-size:14px;transition:border-color 0.2s,box-shadow 0.2s;outline:none;}
-.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}.input::placeholder{color:var(--text-muted);}select.input{cursor:pointer;}
-.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color 0.2s;}.card:hover{border-color:var(--border-light);}
-.label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:block;}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600;}
-.badge-income{background:var(--green-dim);color:var(--green);}.badge-expense{background:var(--red-dim);color:var(--red);}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root, [data-theme="dark"] {
+  --bg-primary: #0d0f12;
+  --bg-secondary: #161920;
+  --bg-card: #1a1d24;
+  --bg-card-hover: #1e222b;
+  --border: rgba(255,255,255,0.06);
+  --border-light: rgba(255,255,255,0.1);
+  --text-primary: #f0f2f5;
+  --text-secondary: #8892a0;
+  --text-muted: #4a5568;
+  --accent: #7c6cfc;
+  --accent-dim: rgba(124,108,252,0.12);
+  --green: #2dd4a0;
+  --green-dim: rgba(45,212,160,0.1);
+  --red: #ff5e7d;
+  --red-dim: rgba(255,94,125,0.1);
+  --yellow: #f5c842;
+  --yellow-dim: rgba(245,200,66,0.1);
+  --font-display: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ebeef2;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+  --border: rgba(0,0,0,0.08);
+  --border-light: rgba(0,0,0,0.12);
+  --text-primary: #0d0f12;
+  --text-secondary: #4a5568;
+  --text-muted: #9aa5b4;
+  --accent: #6c5ce7;
+  --accent-dim: rgba(108,92,231,0.1);
+  --green: #00b894;
+  --green-dim: rgba(0,184,148,0.1);
+  --red: #e84393;
+  --red-dim: rgba(232,67,147,0.1);
+  --yellow: #e67e22;
+  --yellow-dim: rgba(230,126,34,0.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font-display); background: var(--bg-primary); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color 0.2s ease; }
+.card:hover { border-color: var(--border-light); }
+.label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; }
+.input { width: 100%; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; color: var(--text-primary); font-family: var(--font-display); font-size: 14px; outline: none; transition: border-color 0.15s ease; }
+.input:focus { border-color: var(--accent); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-sm); border: none; font-family: var(--font-display); font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.15s ease; text-decoration: none; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+.btn-ghost { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--border-light); color: var(--text-primary); }
+.btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,94,125,0.2); }
+.btn-danger:hover { background: rgba(255,94,125,0.2); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge-income { background: var(--green-dim); color: var(--green); }
+.badge-expense { background: var(--red-dim); color: var(--red); }
+
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }

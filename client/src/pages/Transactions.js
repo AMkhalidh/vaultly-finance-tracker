@@ -17,13 +17,25 @@ export default function Transactions() {
   };
   useEffect(()=>{fetchT();},[filters]);
   const del = async(id)=>{ setDeleting(id); try{await api.delete(`/api/transactions/${id}`);fetchT();}catch(e){console.error(e);}finally{setDeleting(null);} };
+  const exportCSV = () => {
+    const headers = ['Date','Type','Category','Description','Amount'];
+    const rows = transactions.map(t => [new Date(t.date).toLocaleDateString(), t.type, t.category, t.description||'', t.amount.toFixed(2)]);
+    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `vaultly-transactions-${MONTHS[filters.month-1]}-${filters.year}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
   return (
     <div>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:32,animation:'fadeUp 0.3s ease both'}}>
         <div><h1 style={{fontSize:28,fontWeight:800,letterSpacing:'-0.03em',marginBottom:4}}>Transactions</h1><p style={{color:'var(--text-secondary)',fontSize:14}}>{transactions.length} transactions found</p></div>
-        <button className="btn btn-primary" onClick={()=>{setEditTx(null);setShowModal(true);}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>Add Transaction
-        </button>
+        <div style={{display:'flex',gap:8}}>
+          {transactions.length>0&&<button className="btn btn-ghost" onClick={exportCSV}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export CSV</button>}
+          <button className="btn btn-primary" onClick={()=>{setEditTx(null);setShowModal(true);}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>Add Transaction
+          </button>
+        </div>
       </div>
       <div className="card" style={{marginBottom:24}}>
         <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
