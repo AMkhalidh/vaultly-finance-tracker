@@ -67,3 +67,24 @@ body { font-family: var(--font-display); background: var(--bg-primary); color: v
 
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+[data-theme="light"] .card {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+[data-theme="light"] .input {
+  background: #f0f2f5;
+  border-color: rgba(0,0,0,0.1);
+  color: #0d0f12;
+}
+
+[data-theme="light"] .btn-ghost {
+  background: #ebeef2;
+  border-color: rgba(0,0,0,0.1);
+  color: #4a5568;
+}
